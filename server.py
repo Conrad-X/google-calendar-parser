@@ -100,6 +100,27 @@ def generate_allocation_object():
     
     return allocationObject
 
+def update_counters(event_summary, duration):
+    """
+    Update the counters based on the event summary
+    """
+    global FYP_ADVISORY_COUNT, RESEARCH_AND_DEVELOPMENT_COUNT, OTHER_MEETING_COUNT, ENGINEERING_FRAMEWORK_COUNT, CONRADX_COUNT
+    # Add duration to the respective counter
+    if "FYP Advisory -" in event_summary:
+        FYP_ADVISORY_COUNT += duration
+    elif "R&D -" in event_summary:
+        RESEARCH_AND_DEVELOPMENT_COUNT += duration
+    elif "Engineering Framework Support -" in event_summary:
+        ENGINEERING_FRAMEWORK_COUNT += duration
+    elif "ConradX -" in event_summary:
+        CONRADX_COUNT += duration
+    else:
+        OTHER_MEETING_COUNT += duration
+
+@app.get("/")
+async def root():
+    return {"message": "Welcome to the Google Calendar API"}
+
 @app.get("/calendar-events")
 async def get_calendar_events(date: str):
     """
@@ -126,7 +147,7 @@ async def get_calendar_events(date: str):
         # Add 5 working days to calculate the end date
         end_date = add_working_days(start_date, 4)
         
-        # Define working hours (9 AM to 10 PM)
+        # Define working hours (9 AM to 11 PM)
         start_time = start_date.replace(hour=9, minute=0, second=0, microsecond=0)
         end_time = end_date.replace(hour=23, minute=59, second=59, microsecond=999999)
 
@@ -147,8 +168,7 @@ async def get_calendar_events(date: str):
             maxResults=100,
             singleEvents=True,
             orderBy='startTime'
-        ).execute()
-         
+        ).execute()     
         events = events_result.get('items', [])
         formatted_events = []
 
@@ -180,23 +200,11 @@ async def get_calendar_events(date: str):
                     'duration': duration,
                     'attendance_status': attendance_status
                 }
-
                 # Add description to the event object if it exists
                 if 'description' in event:
                     event_object['description'] = event['description']
-
-                # Add duration to the respective counter
-                if "FYP Advisory -" in event['summary']:
-                    FYP_ADVISORY_COUNT += duration
-                elif "R&D -" in event['summary']:
-                    RESEARCH_AND_DEVELOPMENT_COUNT += duration
-                elif "Engineering Framework Support -" in event['summary']:
-                    ENGINEERING_FRAMEWORK_COUNT += duration
-                elif "ConradX -" in event['summary']:
-                    CONRADX_COUNT += duration
-                else:
-                    OTHER_MEETING_COUNT += duration
-
+                # Update the counters
+                update_counters(event['summary'], duration)
                 formatted_events.append(event_object)
 
         if not formatted_events:
