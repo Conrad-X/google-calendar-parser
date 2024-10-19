@@ -38,7 +38,7 @@ To run the `server.py` file locally, follow these steps:
 
 6. **Run the server:**
    ```
-   fastapi run server.py
+   fastapi dev server.py
    ```
 
    The server will start running on `http://127.0.0.1:8000`.

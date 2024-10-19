@@ -170,8 +170,9 @@ async def get_calendar_events(date: str):
             orderBy='startTime'
         ).execute()     
         events = events_result.get('items', [])
-        formatted_events = []
 
+        # Format the events
+        formatted_events = []
         for event in events:
             start = event['start'].get('dateTime', event['start'].get('date'))
             end = event['end'].get('dateTime', event['end'].get('date'))
@@ -210,10 +211,10 @@ async def get_calendar_events(date: str):
         if not formatted_events:
             return {"message": "No events found for this date."}
         
-        allocationObject = generate_allocation_object()
+        calendar_meeting_allocations = generate_allocation_object()
 
         # Return the list of events
-        return {"allocation": allocationObject}
+        return {"allocation": calendar_meeting_allocations}
     
     except Exception as e:
         return {"error": str(e)}
