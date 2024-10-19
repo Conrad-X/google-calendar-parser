@@ -10,6 +10,7 @@ import os
 load_dotenv()
 app = FastAPI()
 
+# Email of the user of your google calendar
 EMAIL = os.getenv("EMAIL")
 
 # Path to the service account JSON key file
@@ -27,13 +28,14 @@ service = build('calendar', 'v3', credentials=credentials)
 
 # Meeting Ignore list
 MEETING_IGNORE_LIST = [
-    "Office",
-    "Home",
+    "Office", # This corresponds to the office location
+    "Home", # This corresponds to the home location
     "Break - Lunch Time",
     "Break - Table Tennis",
     "Break - Jumma Prayer",
 ]
 
+# Counters
 FYP_ADVISORY_COUNT = 0
 RESEARCH_AND_DEVELOPMENT_COUNT = 0
 OTHER_MEETING_COUNT = 0
@@ -54,6 +56,49 @@ def add_working_days(start_date, working_days):
             days_added += 1
     
     return current_date
+
+def generate_allocation_object():
+    """
+    Generate the allocation object
+    """
+    global FYP_ADVISORY_COUNT, RESEARCH_AND_DEVELOPMENT_COUNT, OTHER_MEETING_COUNT, ENGINEERING_FRAMEWORK_COUNT, CONRADX_COUNT
+    allocationObject = [
+        {
+            "name": "R&D / Pre-Sales (Solution building, Internal team standups)",
+            "duration": RESEARCH_AND_DEVELOPMENT_COUNT,
+            "percentage": float(RESEARCH_AND_DEVELOPMENT_COUNT/40) * 100
+        },
+        {
+            "name": "Pre-Sales & Demo Meetings",
+            "duration": OTHER_MEETING_COUNT,
+            "percentage": float(OTHER_MEETING_COUNT/40) * 100
+        },
+        {
+            "name": "Engineering framework support (Team CDCC & Simplistic)",
+            "duration": ENGINEERING_FRAMEWORK_COUNT,
+            "percentage": float(ENGINEERING_FRAMEWORK_COUNT/40) * 100
+        },
+        {
+            "name": "ConradX / Substack",
+            "duration": CONRADX_COUNT,
+            "percentage": float(CONRADX_COUNT/40) * 100
+        },
+        {
+            "name": "Fast FYP Advisory",
+            "duration": FYP_ADVISORY_COUNT,
+            "percentage": float(FYP_ADVISORY_COUNT/40) * 100
+        }
+    ]
+
+    print("-----------------------------------------------------------------------------------------------------------")
+    print(f"R&D / Pre-Sales (Solution building, Internal team standups) : {RESEARCH_AND_DEVELOPMENT_COUNT} hours - {float(RESEARCH_AND_DEVELOPMENT_COUNT/40) * 100} %")
+    print(f"Pre-Sales & Demo Meetings: {OTHER_MEETING_COUNT} hours - {float(OTHER_MEETING_COUNT/40) * 100} %")
+    print(f"Engineering framework support (Team CDCC & Simplistic): {ENGINEERING_FRAMEWORK_COUNT} hours - {float(ENGINEERING_FRAMEWORK_COUNT/40) * 100} %")
+    print(f"Fast FYP Advisory: {FYP_ADVISORY_COUNT} hours - {float(FYP_ADVISORY_COUNT/40) * 100} %")
+    print(f"ConradX / Substack : {CONRADX_COUNT} hours - {float(CONRADX_COUNT/40) * 100} %")
+    print("-----------------------------------------------------------------------------------------------------------")
+    
+    return allocationObject
 
 @app.get("/calendar-events")
 async def get_calendar_events(date: str):
@@ -157,42 +202,8 @@ async def get_calendar_events(date: str):
         if not formatted_events:
             return {"message": "No events found for this date."}
         
-        allocationObject = [
-            {
-                "name": "R&D / Pre-Sales (Solution building, Internal team standups)",
-                "duration": RESEARCH_AND_DEVELOPMENT_COUNT,
-                "percentage": float(RESEARCH_AND_DEVELOPMENT_COUNT/40) * 100
-            },
-            {
-                "name": "Pre-Sales & Demo Meetings",
-                "duration": OTHER_MEETING_COUNT,
-                "percentage": float(OTHER_MEETING_COUNT/40) * 100
-            },
-            {
-                "name": "Engineering framework support (Team CDCC & Simplistic)",
-                "duration": ENGINEERING_FRAMEWORK_COUNT,
-                "percentage": float(ENGINEERING_FRAMEWORK_COUNT/40) * 100
-            },
-            {
-                "name": "ConradX / Substack",
-                "duration": CONRADX_COUNT,
-                "percentage": float(CONRADX_COUNT/40) * 100
-            },
-            {
-                "name": "Fast FYP Advisory",
-                "duration": FYP_ADVISORY_COUNT,
-                "percentage": float(FYP_ADVISORY_COUNT/40) * 100
-            }
-        ]
+        allocationObject = generate_allocation_object()
 
-        print("--------------------------------------------------------------------------------------------------------------------------------")
-        print(f"R&D / Pre-Sales (Solution building, Internal team standups) : {RESEARCH_AND_DEVELOPMENT_COUNT} hours - {float(RESEARCH_AND_DEVELOPMENT_COUNT/40) * 100} %")
-        print(f"Pre-Sales & Demo Meetings: {OTHER_MEETING_COUNT} hours - {float(OTHER_MEETING_COUNT/40) * 100} %")
-        print(f"Engineering framework support (Team CDCC & Simplistic): {ENGINEERING_FRAMEWORK_COUNT} hours - {float(ENGINEERING_FRAMEWORK_COUNT/40) * 100} %")
-        print(f"Fast FYP Advisory: {FYP_ADVISORY_COUNT} hours - {float(FYP_ADVISORY_COUNT/40) * 100} %")
-        print(f"ConradX / Substack : {CONRADX_COUNT} hours - {float(CONRADX_COUNT/40) * 100} %")
-        print("--------------------------------------------------------------------------------------------------------------------------------")
-        
         # Return the list of events
         return {"allocation": allocationObject}
     
