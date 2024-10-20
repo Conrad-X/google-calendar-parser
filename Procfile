@@ -1,1 +1,1 @@
-web: fastapi dev server.py
+web: fastapi run
