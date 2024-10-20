@@ -122,7 +122,7 @@ def update_counters(event_summary, duration):
 async def root():
     return {"message": "Welcome to the Google Calendar API"}
 
-@app.get("/calendar-events")
+@app.get("/events")
 async def get_calendar_events(date: str):
     """
     Fetch calendar events for the full working day (9 AM to 5 PM) starting from the given date.
