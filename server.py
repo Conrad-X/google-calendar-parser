@@ -6,22 +6,21 @@ from datetime import datetime, timedelta
 from dotenv import load_dotenv
 import pytz
 import os
+import json
 
 load_dotenv()
 app = FastAPI()
 
 # Email of the user of your google calendar
 EMAIL = os.getenv("EMAIL")
-
-# Path to the service account JSON key file
-SERVICE_ACCOUNT_FILE = 'credentials.json'
+GOOGLE_CREDENTIALS = json.loads(os.getenv("GOOGLE_CREDENTIALS_PATH"))
 
 # Scopes required for the Google Calendar API
 SCOPES = ['https://www.googleapis.com/auth/calendar.readonly']
 TIMEZONE = 'Asia/Karachi'
 
 # Load credentials from the service account file
-credentials = service_account.Credentials.from_service_account_file(SERVICE_ACCOUNT_FILE, scopes=SCOPES)
+credentials = service_account.Credentials.from_service_account_info(GOOGLE_CREDENTIALS, scopes=SCOPES)
 
 # Google Calendar service instance
 service = build('calendar', 'v3', credentials=credentials)
