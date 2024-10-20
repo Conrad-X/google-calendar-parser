@@ -21,9 +21,11 @@ TIMEZONE = 'Asia/Karachi'
 
 # Load credentials from the service account file
 credentials = service_account.Credentials.from_service_account_info(GOOGLE_CREDENTIALS, scopes=SCOPES)
+print(f"Google Service Account Connection Established.")
 
 # Google Calendar service instance
 service = build('calendar', 'v3', credentials=credentials)
+print(f"Google Calendar Service Initialized.")
 
 # Meeting Ignore list
 MEETING_IGNORE_LIST = [
