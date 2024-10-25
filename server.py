@@ -66,28 +66,28 @@ def generate_allocation_object():
     allocationObject = [
         {
             "name": "R&D / Pre-Sales (Solution building, Internal team standups)",
-            "duration": RESEARCH_AND_DEVELOPMENT_COUNT,
-            "percentage": float(RESEARCH_AND_DEVELOPMENT_COUNT/40) * 100
+            "duration": round(RESEARCH_AND_DEVELOPMENT_COUNT, 2),
+            "percentage": round(float(RESEARCH_AND_DEVELOPMENT_COUNT/40) * 100, 2)
         },
         {
             "name": "Pre-Sales & Demo Meetings",
-            "duration": OTHER_MEETING_COUNT,
-            "percentage": float(OTHER_MEETING_COUNT/40) * 100
+            "duration": round(OTHER_MEETING_COUNT, 2),
+            "percentage": round(float(OTHER_MEETING_COUNT/40) * 100, 2)
         },
         {
             "name": "Engineering framework support (Team CDCC & Simplistic)",
-            "duration": ENGINEERING_FRAMEWORK_COUNT,
-            "percentage": float(ENGINEERING_FRAMEWORK_COUNT/40) * 100
+            "duration": round(ENGINEERING_FRAMEWORK_COUNT, 2),
+            "percentage": round(float(ENGINEERING_FRAMEWORK_COUNT/40) * 100, 2)
         },
         {
             "name": "ConradX / Substack",
             "duration": CONRADX_COUNT,
-            "percentage": float(CONRADX_COUNT/40) * 100
+            "percentage": round(float(CONRADX_COUNT/40) * 100, 2)
         },
         {
             "name": "Fast FYP Advisory",
-            "duration": FYP_ADVISORY_COUNT,
-            "percentage": float(FYP_ADVISORY_COUNT/40) * 100
+            "duration": round(FYP_ADVISORY_COUNT, 2),
+            "percentage": round(float(FYP_ADVISORY_COUNT/40) * 100, 2)
         }
     ]
 
@@ -117,6 +117,7 @@ def update_counters(event_summary, duration):
         CONRADX_COUNT += duration
     else:
         OTHER_MEETING_COUNT += duration
+    
 
 @app.get("/")
 async def root():
