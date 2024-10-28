@@ -8,11 +8,14 @@ import pytz
 import os
 import json
 
+from utility.read_spreadsheet import fetch_google_sheet_records
+
 load_dotenv()
 app = FastAPI()
 
 # Email of the user of your google calendar
 EMAIL = os.getenv("EMAIL")
+GOOGLE_ALLOCATION_SHEET_NAME = os.getenv("GOOGLE_ALLOCATION_SHEET_NAME")
 GOOGLE_CREDENTIALS = json.loads(os.getenv("GOOGLE_CREDENTIALS_PATH"))
 
 # Scopes required for the Google Calendar API
@@ -122,6 +125,10 @@ def update_counters(event_summary, duration):
 @app.get("/")
 async def root():
     return {"message": "Welcome to the Google Calendar API"}
+
+@app.get("/allocation")
+async def get_allocation():
+    return fetch_google_sheet_records(GOOGLE_ALLOCATION_SHEET_NAME)
 
 @app.get("/events")
 async def get_calendar_events(date: str):
