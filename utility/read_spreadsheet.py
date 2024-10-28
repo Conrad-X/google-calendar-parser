@@ -25,12 +25,12 @@ def fetch_google_sheet_records(sheet_name:str):
     # Convert the data to a pandas DataFrame
     df = pd.DataFrame(data)
     formatted_data = []
-    formatted_string = ""
+    formatted_string = "<ul style='padding: 0px; margin: 0px;'>"
 
     for index, row in df.iterrows():
         formatted_row = row.to_dict()
         formatted_string += f"<li><b>{formatted_row['Name']}</b> - <a href='{formatted_row['Link']}'>{formatted_row['Project']}</a> ({formatted_row['Allocation']}%)</li>"
         formatted_data.append(formatted_row)
 
-    formatted_string += ""
+    formatted_string += "</ul>"
     return formatted_string
