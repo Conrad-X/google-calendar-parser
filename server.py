@@ -45,6 +45,7 @@ RESEARCH_AND_DEVELOPMENT_COUNT = 0
 OTHER_MEETING_COUNT = 0
 ENGINEERING_FRAMEWORK_COUNT = 0
 CONRADX_COUNT = 0
+INTERVIEW_COUNT = 0
 
 def add_working_days(start_date, working_days):
     """
@@ -65,7 +66,7 @@ def generate_allocation_object():
     """
     Generate the allocation object
     """
-    global FYP_ADVISORY_COUNT, RESEARCH_AND_DEVELOPMENT_COUNT, OTHER_MEETING_COUNT, ENGINEERING_FRAMEWORK_COUNT, CONRADX_COUNT
+    global FYP_ADVISORY_COUNT, RESEARCH_AND_DEVELOPMENT_COUNT, OTHER_MEETING_COUNT, ENGINEERING_FRAMEWORK_COUNT, CONRADX_COUNT, INTERVIEW_COUNT
     allocationObject = [
         {
             "name": "R&D / Pre-Sales (Solution building, Internal team standups)",
@@ -91,6 +92,11 @@ def generate_allocation_object():
             "name": "Fast FYP Advisory",
             "duration": round(FYP_ADVISORY_COUNT, 2),
             "percentage": round(float(FYP_ADVISORY_COUNT/40) * 100, 2)
+        },
+        {
+            "name": "Interviews",
+            "duration": round(INTERVIEW_COUNT, 2),
+            "percentage": round(float(INTERVIEW_COUNT/40) * 100, 2)
         }
     ]
 
@@ -100,6 +106,7 @@ def generate_allocation_object():
     print(f"Engineering framework support (Team CDCC & Simplistic): {ENGINEERING_FRAMEWORK_COUNT} hours - {float(ENGINEERING_FRAMEWORK_COUNT/40) * 100} %")
     print(f"Fast FYP Advisory: {FYP_ADVISORY_COUNT} hours - {float(FYP_ADVISORY_COUNT/40) * 100} %")
     print(f"ConradX / Substack : {CONRADX_COUNT} hours - {float(CONRADX_COUNT/40) * 100} %")
+    print(f"Interviews : {INTERVIEW_COUNT} hours - {float(INTERVIEW_COUNT/40) * 100} %")
     print("-----------------------------------------------------------------------------------------------------------")
     
     return allocationObject
@@ -108,7 +115,7 @@ def update_counters(event_summary, duration):
     """
     Update the counters based on the event summary
     """
-    global FYP_ADVISORY_COUNT, RESEARCH_AND_DEVELOPMENT_COUNT, OTHER_MEETING_COUNT, ENGINEERING_FRAMEWORK_COUNT, CONRADX_COUNT
+    global FYP_ADVISORY_COUNT, RESEARCH_AND_DEVELOPMENT_COUNT, OTHER_MEETING_COUNT, ENGINEERING_FRAMEWORK_COUNT, CONRADX_COUNT, INTERVIEW_COUNT
     # Add duration to the respective counter
     if "FYP Advisory -" in event_summary:
         FYP_ADVISORY_COUNT += duration
@@ -118,6 +125,8 @@ def update_counters(event_summary, duration):
         ENGINEERING_FRAMEWORK_COUNT += duration
     elif "ConradX -" in event_summary:
         CONRADX_COUNT += duration
+    elif "Interview" in event_summary:
+        INTERVIEW_COUNT += duration
     else:
         OTHER_MEETING_COUNT += duration
     
@@ -138,7 +147,7 @@ async def get_calendar_events(date: str):
     :param date: Date in the format 'YYYY-MM-DD'
     :return: List of events during working hours on the given date
     """
-    global FYP_ADVISORY_COUNT, RESEARCH_AND_DEVELOPMENT_COUNT, OTHER_MEETING_COUNT, ENGINEERING_FRAMEWORK_COUNT, CONRADX_COUNT
+    global FYP_ADVISORY_COUNT, RESEARCH_AND_DEVELOPMENT_COUNT, OTHER_MEETING_COUNT, ENGINEERING_FRAMEWORK_COUNT, CONRADX_COUNT, INTERVIEW_COUNT
     
     # Reset counters at the beginning of the function
     FYP_ADVISORY_COUNT = 0
@@ -146,6 +155,7 @@ async def get_calendar_events(date: str):
     OTHER_MEETING_COUNT = 0
     ENGINEERING_FRAMEWORK_COUNT = 0
     CONRADX_COUNT = 0
+    INTERVIEW_COUNT = 0
 
     attendance_status = False
 
