@@ -48,7 +48,7 @@ CONRADX_COUNT = 0
 INTERVIEW_COUNT = 0
 
 # Work Week Configuration
-WORK_WEEK = os.getenv("WORK_WEEK_HOURS")
+WORK_WEEK = float(os.getenv("WORK_WEEK_HOURS"))
 
 def add_working_days(start_date, working_days):
     """
