@@ -47,6 +47,9 @@ ENGINEERING_FRAMEWORK_COUNT = 0
 CONRADX_COUNT = 0
 INTERVIEW_COUNT = 0
 
+# Work Week Configuration
+WORK_WEEK = os.getenv("WORK_WEEK_HOURS")
+
 def add_working_days(start_date, working_days):
     """
     Adds working days (skipping weekends) to the start date.
@@ -71,42 +74,42 @@ def generate_allocation_object():
         {
             "name": "R&D / Pre-Sales (Solution building, Internal team standups)",
             "duration": round(RESEARCH_AND_DEVELOPMENT_COUNT, 2),
-            "percentage": round(float(RESEARCH_AND_DEVELOPMENT_COUNT/40) * 100, 2)
+            "percentage": round(float(RESEARCH_AND_DEVELOPMENT_COUNT/WORK_WEEK) * 100, 2)
         },
         {
             "name": "Pre-Sales & Demo Meetings",
             "duration": round(OTHER_MEETING_COUNT, 2),
-            "percentage": round(float(OTHER_MEETING_COUNT/40) * 100, 2)
+            "percentage": round(float(OTHER_MEETING_COUNT/WORK_WEEK) * 100, 2)
         },
         {
             "name": "Engineering framework support (Team CDCC & Simplistic)",
             "duration": round(ENGINEERING_FRAMEWORK_COUNT, 2),
-            "percentage": round(float(ENGINEERING_FRAMEWORK_COUNT/40) * 100, 2)
+            "percentage": round(float(ENGINEERING_FRAMEWORK_COUNT/WORK_WEEK) * 100, 2)
         },
         {
             "name": "ConradX / Substack",
             "duration": CONRADX_COUNT,
-            "percentage": round(float(CONRADX_COUNT/40) * 100, 2)
+            "percentage": round(float(CONRADX_COUNT/WORK_WEEK) * 100, 2)
         },
         {
             "name": "Fast FYP Advisory",
             "duration": round(FYP_ADVISORY_COUNT, 2),
-            "percentage": round(float(FYP_ADVISORY_COUNT/40) * 100, 2)
+            "percentage": round(float(FYP_ADVISORY_COUNT/WORK_WEEK) * 100, 2)
         },
         {
             "name": "Interviews",
             "duration": round(INTERVIEW_COUNT, 2),
-            "percentage": round(float(INTERVIEW_COUNT/40) * 100, 2)
+            "percentage": round(float(INTERVIEW_COUNT/WORK_WEEK) * 100, 2)
         }
     ]
 
     print("-----------------------------------------------------------------------------------------------------------")
-    print(f"R&D / Pre-Sales (Solution building, Internal team standups) : {RESEARCH_AND_DEVELOPMENT_COUNT} hours - {float(RESEARCH_AND_DEVELOPMENT_COUNT/40) * 100} %")
-    print(f"Pre-Sales & Demo Meetings: {OTHER_MEETING_COUNT} hours - {float(OTHER_MEETING_COUNT/40) * 100} %")
-    print(f"Engineering framework support (Team CDCC & Simplistic): {ENGINEERING_FRAMEWORK_COUNT} hours - {float(ENGINEERING_FRAMEWORK_COUNT/40) * 100} %")
-    print(f"Fast FYP Advisory: {FYP_ADVISORY_COUNT} hours - {float(FYP_ADVISORY_COUNT/40) * 100} %")
-    print(f"ConradX / Substack : {CONRADX_COUNT} hours - {float(CONRADX_COUNT/40) * 100} %")
-    print(f"Interviews : {INTERVIEW_COUNT} hours - {float(INTERVIEW_COUNT/40) * 100} %")
+    print(f"R&D / Pre-Sales (Solution building, Internal team standups) : {RESEARCH_AND_DEVELOPMENT_COUNT} hours - {float(RESEARCH_AND_DEVELOPMENT_COUNT/WORK_WEEK) * 100} %")
+    print(f"Pre-Sales & Demo Meetings: {OTHER_MEETING_COUNT} hours - {float(OTHER_MEETING_COUNT/WORK_WEEK) * 100} %")
+    print(f"Engineering framework support (Team CDCC & Simplistic): {ENGINEERING_FRAMEWORK_COUNT} hours - {float(ENGINEERING_FRAMEWORK_COUNT/WORK_WEEK) * 100} %")
+    print(f"Fast FYP Advisory: {FYP_ADVISORY_COUNT} hours - {float(FYP_ADVISORY_COUNT/WORK_WEEK) * 100} %")
+    print(f"ConradX / Substack : {CONRADX_COUNT} hours - {float(CONRADX_COUNT/WORK_WEEK) * 100} %")
+    print(f"Interviews : {INTERVIEW_COUNT} hours - {float(INTERVIEW_COUNT/WORK_WEEK) * 100} %")
     print("-----------------------------------------------------------------------------------------------------------")
     
     return allocationObject
