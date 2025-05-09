@@ -70,7 +70,7 @@ def generate_allocation_object():
     """
     Generate the allocation object
     """
-    global AI_SQUAD_MEETINGS, CATALYST_HUB_MEETINGS, RESEARCH_AND_DEVELOPMENT_COUNT, PRE_SALES_MEETINGS, CONRADX_COUNT, INTERVIEW_COUNT
+    global AI_SQUAD_MEETINGS, CATALYST_HUB_MEETINGS, RESEARCH_AND_DEVELOPMENT_COUNT, PRE_SALES_MEETINGS, CONRADX_COUNT, INTERVIEW_COUNT, OTHER_MEETING_COUNT
     allocationObject = [
         {
             "name": "R&D Meetings (Solution building, Internal team standups)",
@@ -119,7 +119,7 @@ def update_counters(event_summary, duration):
     """
     Update the counters based on the event summary
     """
-    global AI_SQUAD_MEETINGS, CATALYST_HUB_MEETINGS, RESEARCH_AND_DEVELOPMENT_COUNT, PRE_SALES_MEETINGS, CONRADX_COUNT, INTERVIEW_COUNT
+    global AI_SQUAD_MEETINGS, CATALYST_HUB_MEETINGS, RESEARCH_AND_DEVELOPMENT_COUNT, PRE_SALES_MEETINGS, CONRADX_COUNT, INTERVIEW_COUNT, OTHER_MEETING_COUNT
     # Add duration to the respective counter
     if "Pre-Sales -" in event_summary or "Daily Pre-Sales" in event_summary:
         PRE_SALES_MEETINGS += duration
@@ -152,7 +152,7 @@ async def get_calendar_events(date: str):
     :param date: Date in the format 'YYYY-MM-DD'
     :return: List of events during working hours on the given date
     """
-    global AI_SQUAD_MEETINGS, CATALYST_HUB_MEETINGS, RESEARCH_AND_DEVELOPMENT_COUNT, PRE_SALES_MEETINGS, CONRADX_COUNT, INTERVIEW_COUNT
+    global AI_SQUAD_MEETINGS, CATALYST_HUB_MEETINGS, RESEARCH_AND_DEVELOPMENT_COUNT, PRE_SALES_MEETINGS, CONRADX_COUNT, INTERVIEW_COUNT, OTHER_MEETING_COUNT
     
     # Reset counters at the beginning of the function
     AI_SQUAD_MEETINGS = 0
