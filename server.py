@@ -40,12 +40,13 @@ MEETING_IGNORE_LIST = [
 ]
 
 # Counters
-FYP_ADVISORY_COUNT = 0
 RESEARCH_AND_DEVELOPMENT_COUNT = 0
-OTHER_MEETING_COUNT = 0
-ENGINEERING_FRAMEWORK_COUNT = 0
+AI_SQUAD_MEETINGS = 0
+CATALYST_HUB_MEETINGS = 0
+PRE_SALES_MEETINGS = 0
 CONRADX_COUNT = 0
 INTERVIEW_COUNT = 0
+OTHER_MEETING_COUNT = 0
 
 # Work Week Configuration
 WORK_WEEK = float(os.getenv("WORK_WEEK_HOURS"))
@@ -69,22 +70,22 @@ def generate_allocation_object():
     """
     Generate the allocation object
     """
-    global FYP_ADVISORY_COUNT, RESEARCH_AND_DEVELOPMENT_COUNT, OTHER_MEETING_COUNT, ENGINEERING_FRAMEWORK_COUNT, CONRADX_COUNT, INTERVIEW_COUNT
+    global AI_SQUAD_MEETINGS, CATALYST_HUB_MEETINGS, RESEARCH_AND_DEVELOPMENT_COUNT, PRE_SALES_MEETINGS, CONRADX_COUNT, INTERVIEW_COUNT
     allocationObject = [
         {
-            "name": "R&D / Pre-Sales (Solution building, Internal team standups)",
+            "name": "R&D Meetings (Solution building, Internal team standups)",
             "duration": round(RESEARCH_AND_DEVELOPMENT_COUNT, 2),
             "percentage": round(float(RESEARCH_AND_DEVELOPMENT_COUNT/WORK_WEEK) * 100, 2)
         },
         {
-            "name": "Pre-Sales & Demo Meetings",
-            "duration": round(OTHER_MEETING_COUNT, 2),
-            "percentage": round(float(OTHER_MEETING_COUNT/WORK_WEEK) * 100, 2)
+            "name": "Pre-Sales Meetings",
+            "duration": round(PRE_SALES_MEETINGS, 2),
+            "percentage": round(float(PRE_SALES_MEETINGS/WORK_WEEK) * 100, 2)
         },
         {
-            "name": "Engineering framework support (Team CDCC & Simplistic)",
-            "duration": round(ENGINEERING_FRAMEWORK_COUNT, 2),
-            "percentage": round(float(ENGINEERING_FRAMEWORK_COUNT/WORK_WEEK) * 100, 2)
+            "name": "AI-Squad Meetings",
+            "duration": round(AI_SQUAD_MEETINGS, 2),
+            "percentage": round(float(AI_SQUAD_MEETINGS/WORK_WEEK) * 100, 2)
         },
         {
             "name": "ConradX / Substack",
@@ -92,9 +93,9 @@ def generate_allocation_object():
             "percentage": round(float(CONRADX_COUNT/WORK_WEEK) * 100, 2)
         },
         {
-            "name": "Fast FYP Advisory",
-            "duration": round(FYP_ADVISORY_COUNT, 2),
-            "percentage": round(float(FYP_ADVISORY_COUNT/WORK_WEEK) * 100, 2)
+            "name": "Catalyst-Hub Mentoring Meetings",
+            "duration": round(CATALYST_HUB_MEETINGS, 2),
+            "percentage": round(float(CATALYST_HUB_MEETINGS/WORK_WEEK) * 100, 2)
         },
         {
             "name": "Interviews",
@@ -104,10 +105,10 @@ def generate_allocation_object():
     ]
 
     print("-----------------------------------------------------------------------------------------------------------")
-    print(f"R&D / Pre-Sales (Solution building, Internal team standups) : {RESEARCH_AND_DEVELOPMENT_COUNT} hours - {float(RESEARCH_AND_DEVELOPMENT_COUNT/WORK_WEEK) * 100} %")
-    print(f"Pre-Sales & Demo Meetings: {OTHER_MEETING_COUNT} hours - {float(OTHER_MEETING_COUNT/WORK_WEEK) * 100} %")
-    print(f"Engineering framework support (Team CDCC & Simplistic): {ENGINEERING_FRAMEWORK_COUNT} hours - {float(ENGINEERING_FRAMEWORK_COUNT/WORK_WEEK) * 100} %")
-    print(f"Fast FYP Advisory: {FYP_ADVISORY_COUNT} hours - {float(FYP_ADVISORY_COUNT/WORK_WEEK) * 100} %")
+    print(f"R&D (Solution building, Internal team standups) : {RESEARCH_AND_DEVELOPMENT_COUNT} hours - {float(RESEARCH_AND_DEVELOPMENT_COUNT/WORK_WEEK) * 100} %")
+    print(f"Pre-Sales Meetings : {PRE_SALES_MEETINGS} hours - {float(PRE_SALES_MEETINGS/WORK_WEEK) * 100} %")
+    print(f"AI-Squad Meetings : {AI_SQUAD_MEETINGS} hours - {float(AI_SQUAD_MEETINGS/WORK_WEEK) * 100} %")
+    print(f"Catalyst-Hub Mentoring Meetings : {CATALYST_HUB_MEETINGS} hours - {float(CATALYST_HUB_MEETINGS/WORK_WEEK) * 100} %")
     print(f"ConradX / Substack : {CONRADX_COUNT} hours - {float(CONRADX_COUNT/WORK_WEEK) * 100} %")
     print(f"Interviews : {INTERVIEW_COUNT} hours - {float(INTERVIEW_COUNT/WORK_WEEK) * 100} %")
     print("-----------------------------------------------------------------------------------------------------------")
@@ -118,21 +119,22 @@ def update_counters(event_summary, duration):
     """
     Update the counters based on the event summary
     """
-    global FYP_ADVISORY_COUNT, RESEARCH_AND_DEVELOPMENT_COUNT, OTHER_MEETING_COUNT, ENGINEERING_FRAMEWORK_COUNT, CONRADX_COUNT, INTERVIEW_COUNT
+    global AI_SQUAD_MEETINGS, CATALYST_HUB_MEETINGS, RESEARCH_AND_DEVELOPMENT_COUNT, PRE_SALES_MEETINGS, CONRADX_COUNT, INTERVIEW_COUNT
     # Add duration to the respective counter
-    if "FYP Advisory -" in event_summary:
-        FYP_ADVISORY_COUNT += duration
+    if "Pre-Sales -" in event_summary or "Daily Pre-Sales" in event_summary:
+        PRE_SALES_MEETINGS += duration
+    elif "AI Squad -" in event_summary or "AI Daily" in event_summary:
+        AI_SQUAD_MEETINGS += duration
+    elif "Catalyst-Hub -" in event_summary or "Catalyst hub" in event_summary:
+        CATALYST_HUB_MEETINGS += duration
     elif "R&D -" in event_summary:
         RESEARCH_AND_DEVELOPMENT_COUNT += duration
-    elif "Engineering Framework Support -" in event_summary:
-        ENGINEERING_FRAMEWORK_COUNT += duration
     elif "ConradX -" in event_summary:
         CONRADX_COUNT += duration
     elif "Interview" in event_summary:
         INTERVIEW_COUNT += duration
     else:
         OTHER_MEETING_COUNT += duration
-    
 
 @app.get("/")
 async def root():
@@ -150,13 +152,13 @@ async def get_calendar_events(date: str):
     :param date: Date in the format 'YYYY-MM-DD'
     :return: List of events during working hours on the given date
     """
-    global FYP_ADVISORY_COUNT, RESEARCH_AND_DEVELOPMENT_COUNT, OTHER_MEETING_COUNT, ENGINEERING_FRAMEWORK_COUNT, CONRADX_COUNT, INTERVIEW_COUNT
+    global AI_SQUAD_MEETINGS, CATALYST_HUB_MEETINGS, RESEARCH_AND_DEVELOPMENT_COUNT, PRE_SALES_MEETINGS, CONRADX_COUNT, INTERVIEW_COUNT
     
     # Reset counters at the beginning of the function
-    FYP_ADVISORY_COUNT = 0
+    AI_SQUAD_MEETINGS = 0
     RESEARCH_AND_DEVELOPMENT_COUNT = 0
-    OTHER_MEETING_COUNT = 0
-    ENGINEERING_FRAMEWORK_COUNT = 0
+    CATALYST_HUB_MEETINGS = 0
+    PRE_SALES_MEETINGS = 0
     CONRADX_COUNT = 0
     INTERVIEW_COUNT = 0
 
